@@ -1,9 +1,10 @@
 import csv
-import matplotlib as plt
 import matplotlib.pyplot as pyplot
 import re
 import tweepy
 from textblob import TextBlob
+
+import twitter_credentials as creds
 
 
 class SentimentAnalysis:
@@ -13,22 +14,16 @@ class SentimentAnalysis:
         self.tweetText = []
 
     def DownloadData(self):
-        # authenticating
-        consumerKey = '8bUE7O33DJqmxKvAFq8D2FFXX'
-        consumerSecret = 'CDMCORjTgl7ED7qLAXdb4dG7tIDIoEt1jxASZu3IL0KI0A8aBi'
-        accessToken = '372518864-imjpYo7IBJbKCcXjB3GXcRrFBlP83pnK088iZ59E'
-        accessTokenSecret = 'rqqZcv616VTt4fhAT3nn83Z94GtR2HqJtKoMXusx9eehh'
-        auth = tweepy.OAuthHandler(consumerKey, consumerSecret)
-        auth.set_access_token(accessToken, accessTokenSecret)
+        auth = tweepy.OAuthHandler(creds.CONSUMER_KEY, creds.CONSUMER_SECRET)
+        auth.set_access_token(creds.ACCESS_TOKEN, creds.ACCESS_TOKEN_SECRET)
         api = tweepy.API(auth)
 
         # input for term to be searched and how many tweets to search
         searchTerm = input("Keyword/Tag girin: ")
         NoOfTerms = int(input("Toplamda kaç tweet için analiz yapılsın, girin: "))
-        lang = input("Arama yapılacak dil kısaltmasını (Örn: en, tr, de) girin : ")
 
         # searching for tweets
-        self.tweets = tweepy.Cursor(api.search, q=searchTerm, lang=lang).items(NoOfTerms)
+        self.tweets = tweepy.Cursor(api.search, q=searchTerm, lang="en").items(NoOfTerms)
 
         # Open/create a file to append data to
         csvFile = open('result.csv', 'a')
